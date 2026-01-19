@@ -47,10 +47,11 @@ app.get("/auth/me", (req, res) => {
     const { balance } = db.prepare(
         "SELECT balance FROM users WHERE id = ?"
     ).get(req.session.userId) || 0
-
+    console.log(req.session)
     if (req.session.userId) {
         return res.status(200).json({logged: true, user: {
             userId: req.session.userId,
+            username: req.session.username,
             email: req.session.email,
             balance: balance
         }})
@@ -62,14 +63,15 @@ app.post("/auth/signup", (req, res) => {
     try {
         const hashed = bcrypt.hashSync(req.body.password, 10)
         const newUser = db
-            .prepare(`INSERT INTO users (email, password) VALUES (?, ?)`)
-            .run(req.body.email, hashed);
+            .prepare(`INSERT INTO users (email, username, password) VALUES (?, ?, ?)`)
+            .run(req.body.email, req.body.username, hashed);
         const createdUser = db
             .prepare(`SELECT * FROM users WHERE id = ?`)
             .get(newUser.lastInsertRowid);
 
         req.session.userId = createdUser.id
         req.session.email = createdUser.email
+        req.session.username = createdUser.username
         req.session.balance = createdUser.balance
 
         res.status(201).json(createdUser)
@@ -95,8 +97,11 @@ app.post("/auth/signin", (req, res) => {
                 .status(401)
                 .json({ error: "Неправильные данные" })
 
+        console.log(user);
+                
         req.session.email = user.email
         req.session.userId = user.id
+        req.session.username = user.username
         req.session.balance = user.balance
 
         res.status(200).json(user) 
@@ -130,4 +135,8 @@ app.get("/leaderboard", (req, res) => {
 
 app.get("/csrf-token", csrfMiddleware, (req, res) => {
     res.json({token: req.csrfToken()})
+})
+
+app.listen("3000", () => {
+    console.log("Порт3000")
 })

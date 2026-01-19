@@ -1,4 +1,12 @@
+import { useState } from "react"
+import Header from "../components/Header"
+import SlotMachine from "../components/SlotMachine"
+import PayoutTable from "../components/PayoutTable"
+
 const Slot = () => {
+    const [balance, setBalance] = useState(0)
+    const bets = [10, 50, 100]
+    const [message, setWinMessage] = useState('')
     const [currentBet, setCurrentBet] = useState(10)
     const [isSpinning, setIsSpinning] = useState(false)
     const [reelResults, setReelResults] = useState(['📚', '✏️', '🧠']) // начальное состояние
@@ -72,7 +80,7 @@ const Slot = () => {
                     `🎉 ПОЗДРАВЛЯЕМ! Вы получили ${winAmount} баллов! 🎉`,
                 )
             } else {
-                setWinMessage('[ПРИДУМАЙТЕ ФРАЗУ ПРОИГРЫША]')
+                setWinMessage('лох')
             }
 
             setIsSpinning(false)
@@ -90,7 +98,7 @@ const Slot = () => {
 
             <div className="slot-machine">
                 <div className="slot-machine-header">
-                    <h2>🎲 [ПРИДУМАЙТЕ НАЗВАНИЕ ИГРЫ] 🎲</h2>
+                    <h2>🎲 Менас 🎲</h2>
                 </div>
                 <SlotMachine symbols={reelResults} isSpinning={isSpinning} />
                 <div className="win-message">{message}</div>;
@@ -125,4 +133,4 @@ const Slot = () => {
     )
 }
 
-export default GameScreen
+export default Slot

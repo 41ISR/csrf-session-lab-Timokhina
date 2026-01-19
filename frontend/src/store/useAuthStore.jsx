@@ -4,8 +4,9 @@ export const useAuthStore = create((set, get) => ({
     user: undefined,
     checkAuth: async () => {
         try {
-            const res = await fetch("https://ominous-space-parakeet-pjpvwp95wwgw276rr-5173.app.github.dev/auth/me", {
-                credentials: "include"
+            const res = await fetch("https://ominous-space-parakeet-pjpvwp95wwgw276rr-3000.app.github.dev/auth/me", {
+                credentials: "include",
+                headers: {"Content-Type":"application/json"}
             })
 
             if (!res.ok) throw new Error(res.error)
@@ -25,7 +26,7 @@ export const useAuthStore = create((set, get) => ({
     csrfToken: undefined,
     getCsrfToken: async () => {
         try {
-            const res = await fetch("https://ominous-space-parakeet-pjpvwp95wwgw276rr-5173.app.github.dev/csrf-token", {
+            const res = await fetch("https://ominous-space-parakeet-pjpvwp95wwgw276rr-3000.app.github.dev/csrf-token", {
                 credentials: "include"
             })
 
