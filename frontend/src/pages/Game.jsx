@@ -13,46 +13,7 @@ const Slot = () => {
 
     // Отправка запроса на сервер для спина
     const spin = async () => {
-        // Валидация ставки
-        if (![10, 50, 100].includes(bet)) {
-            return res.status(400).json({ error: 'Недопустимая ставка' })
-        }
-
-        try {
-            // Получаем текущий баланс
-            const user = db
-                .prepare('SELECT balance FROM users WHERE id = ?')
-                .get(req.session.userId)
-            if (!user || user.balance < bet) {
-                return res.status(400).json({ error: 'Недостаточно баллов' })
-            }
-
-            // Генерируем случайный результат
-            const resultSymbols = Array.from(
-                { length: 3 },
-                () => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)],
-            )
-            const multiplier = getCombinationMultiplier(resultSymbols)
-            const winAmount = multiplier * bet
-
-            // Обновляем баланс в БД
-            const newBalance = user.balance - bet + winAmount
-            db.prepare('UPDATE users SET balance = ? WHERE id = ?').run(
-                newBalance,
-                req.session.userId,
-            )
-
-            // Отправляем результат
-            res.json({
-                symbols: resultSymbols,
-                winAmount,
-                isWin: winAmount > 0,
-                newBalance,
-            })
-        } catch (err) {
-            console.error(err)
-            res.status(500).json({ error: 'Ошибка сервера' })
-        }
+    
 
         setIsSpinning(true)
         setWinMessage('')
